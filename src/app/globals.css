@@ -147,3 +147,31 @@ body {
     background: var(--surface-2);
   }
 }
+
+/* ── 모바일 최적화 ──────────────────────────────────────────── */
+/* 부드러운 관성 스크롤 */
+.momentum {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+/* 안전영역(노치/홈 인디케이터) */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (max-width: 640px) {
+  /* iOS 입력 포커스 시 자동 확대 방지: 폼 컨트롤 16px */
+  .field,
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  /* 넉넉한 터치 타깃 */
+  .btn,
+  .chip {
+    min-height: 40px;
+  }
+}
+

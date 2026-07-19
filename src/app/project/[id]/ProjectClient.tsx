@@ -210,13 +210,13 @@ export default function ProjectClient({ project }: { project: Project }) {
         </div>
       </header>
 
-      {/* 컨트롤 바 */}
+      {/* 컨트롤 바 (스크롤 시 상단 고정) */}
       <div
-        className="flex flex-wrap items-center gap-2 rounded-xl p-2"
+        className="sticky top-2 z-20 flex flex-wrap items-center gap-2 rounded-xl p-2 shadow-sm"
         style={{ background: "var(--surface)", border: "1px solid var(--line)" }}
       >
         {/* 날짜 이동 */}
-        <div className="flex items-center gap-1">
+        <div className="flex w-full items-center gap-1 sm:w-auto">
           <button onClick={() => setDate(addDays(date, -1))} className="chip px-2" aria-label="prev day">
             <Chevron dir="left" />
           </button>
@@ -224,7 +224,7 @@ export default function ProjectClient({ project }: { project: Project }) {
             type="date"
             value={date}
             onChange={(e) => setDate(e.target.value || todayISO())}
-            className="field tabular w-auto py-1.5"
+            className="field tabular flex-1 py-1.5 sm:w-auto sm:flex-none"
           />
           <button onClick={() => setDate(addDays(date, 1))} className="chip px-2" aria-label="next day">
             <Chevron dir="right" />
@@ -242,12 +242,12 @@ export default function ProjectClient({ project }: { project: Project }) {
           {formatDateDisplay(date, BCP47[locale])}
         </span>
 
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div className="flex w-full flex-wrap items-center gap-2 sm:ml-auto sm:w-auto">
           {/* 내 이름 */}
           <select
             value={selfMemberId ?? ""}
             onChange={(e) => chooseSelf(e.target.value)}
-            className="field w-auto py-1.5"
+            className="field w-auto min-w-0 flex-1 py-1.5 sm:flex-none"
           >
             <option value="">{t("selfPlaceholder")}</option>
             {members.map((m) => (
@@ -281,11 +281,11 @@ export default function ProjectClient({ project }: { project: Project }) {
             {t("freeOnly")}
           </button>
 
-          {/* 일정 추가 */}
+          {/* 일정 추가 (데스크톱 인라인) */}
           <button
             onClick={() => openAdd(selfMemberId || members[0]?.id || "", vs)}
             disabled={members.length === 0}
-            className="btn btn-primary"
+            className="btn btn-primary hidden sm:inline-flex"
           >
             {t("addEvent")}
           </button>
@@ -315,6 +315,20 @@ export default function ProjectClient({ project }: { project: Project }) {
         onEmptyClick={openAdd}
         onEventClick={openEdit}
       />
+
+      {/* 일정 추가 FAB (모바일) */}
+      <button
+        onClick={() => openAdd(selfMemberId || members[0]?.id || "", vs)}
+        disabled={members.length === 0}
+        aria-label={t("addEvent")}
+        className="fixed right-4 z-40 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition active:scale-95 disabled:opacity-40 sm:hidden"
+        style={{ bottom: "calc(1rem + env(safe-area-inset-bottom))", background: "var(--fg)", color: "var(--bg)" }}
+      >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+      </button>
 
       {/* 멤버 추가 모달 */}
       {addMemberOpen && (
@@ -446,15 +460,20 @@ function Overlay({
 }) {
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4"
       style={{ background: "rgba(9,9,11,0.45)", backdropFilter: "blur(2px)" }}
       onClick={onClose}
     >
       <div
-        className="w-full max-w-sm rounded-2xl p-5 shadow-2xl"
+        className="w-full rounded-t-2xl p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-w-sm sm:rounded-2xl sm:pb-5"
         style={{ background: "var(--surface)", border: "1px solid var(--line-strong)" }}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* 모바일 그랩 핸들 */}
+        <div
+          className="mx-auto mb-3 h-1 w-10 rounded-full sm:hidden"
+          style={{ background: "var(--line-strong)" }}
+        />
         {children}
       </div>
     </div>

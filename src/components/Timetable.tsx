@@ -5,9 +5,7 @@ import { useTranslations } from "next-intl";
 import { EventRow, Locale, Member, pickTitle } from "@/lib/types";
 import { hourLabel } from "@/lib/date";
 
-const HOUR_HEIGHT = 52; // px
-const GUTTER = 56; // px
-const MIN_COL = 132; // px
+const HEADER_H = 40; // px, 멤버 헤더 높이
 
 type Props = {
   members: Member[];
@@ -77,10 +75,21 @@ export default function Timetable({
   onEventClick,
 }: Props) {
   const t = useTranslations("timetable");
-  const totalHours = Math.max(1, visibleEnd - visibleStart);
-  const hours = Array.from({ length: totalHours }, (_, i) => visibleStart + i);
 
-  // 현재 시각 인디케이터 (하이드레이션 안전: 마운트 후에만)
+  // 반응형 치수 (마운트 후 창 너비로 결정, SSR은 데스크톱 기준)
+  const [vw, setVw] = useState<number | null>(null);
+  useEffect(() => {
+    const on = () => setVw(window.innerWidth);
+    on();
+    window.addEventListener("resize", on);
+    return () => window.removeEventListener("resize", on);
+  }, []);
+  const mobile = (vw ?? 1024) < 640;
+  const HOUR_HEIGHT = mobile ? 46 : 52;
+  const GUTTER = mobile ? 44 : 56;
+  const MIN_COL = mobile ? 104 : 140;
+
+  // 현재 시각 인디케이터 (마운트 후에만 → 하이드레이션 안전)
   const [nowH, setNowH] = useState<number | null>(null);
   useEffect(() => {
     const tick = () => {
@@ -91,10 +100,12 @@ export default function Timetable({
     const id = setInterval(tick, 60000);
     return () => clearInterval(id);
   }, []);
-  const showNow =
-    isToday && nowH !== null && nowH >= visibleStart && nowH <= visibleEnd;
 
-  // 모두 비는 시간 계산
+  const totalHours = Math.max(1, visibleEnd - visibleStart);
+  const hours = Array.from({ length: totalHours }, (_, i) => visibleStart + i);
+  const showNow = isToday && nowH !== null && nowH >= visibleStart && nowH <= visibleEnd;
+
+  // 모두 비는 시간
   const freeHours = new Set<number>();
   if (members.length > 0) {
     for (const h of hours) {
@@ -106,7 +117,7 @@ export default function Timetable({
   if (members.length === 0) {
     return (
       <div
-        className="flex h-44 items-center justify-center rounded-xl border border-dashed text-sm text-[var(--muted)]"
+        className="flex h-44 items-center justify-center rounded-xl border border-dashed px-4 text-center text-sm text-[var(--muted)]"
         style={{ borderColor: "var(--line-strong)" }}
       >
         {t("addMemberFirst")}
@@ -114,126 +125,129 @@ export default function Timetable({
     );
   }
 
-  const minWidth = GUTTER + members.length * MIN_COL;
-
   return (
     <div
-      className="overflow-x-auto rounded-xl"
+      className="overflow-hidden rounded-xl"
       style={{ background: "var(--surface)", border: "1px solid var(--line)" }}
     >
-      <div style={{ minWidth }}>
-        {/* 헤더: 멤버 이름 */}
-        <div className="flex" style={{ borderBottom: "1px solid var(--line)" }}>
-          <div style={{ width: GUTTER }} className="shrink-0" />
-          {members.map((m) => (
-            <div key={m.id} className="flex flex-1 items-center gap-2 px-3 py-2.5 text-sm font-medium">
-              <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: m.color }} />
-              <span className="truncate">{m.name}</span>
+      <div className="flex">
+        {/* 고정 시간 눈금 (가로 스크롤 밖) */}
+        <div style={{ width: GUTTER }} className="shrink-0" >
+          <div style={{ height: HEADER_H, borderBottom: "1px solid var(--line)" }} />
+          {hours.map((h) => (
+            <div
+              key={h}
+              style={{ height: HOUR_HEIGHT, borderTop: "1px solid var(--line)" }}
+              className="relative"
+            >
+              <span className="tabular absolute -top-2 right-1.5 text-[11px] text-[var(--muted)]">
+                {hourLabel(h)}
+              </span>
             </div>
           ))}
         </div>
 
-        {/* 본문 */}
-        <div className="flex">
-          {/* 시간 눈금 */}
-          <div style={{ width: GUTTER }} className="shrink-0">
-            {hours.map((h) => (
-              <div
-                key={h}
-                style={{ height: HOUR_HEIGHT, borderTop: "1px solid var(--line)" }}
-                className="relative text-right"
-              >
-                <span className="tabular absolute -top-2 right-2 text-[11px] text-[var(--muted)]">
-                  {hourLabel(h)}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* 그리드 영역 */}
-          <div className="relative flex-1" style={{ height: totalHours * HOUR_HEIGHT }}>
-            {/* 시간 밴드 (뒤 배경 · 모두 비는 시간 강조) */}
-            <div className="absolute inset-0">
-              {hours.map((h) => (
-                <div
-                  key={h}
-                  style={{
-                    height: HOUR_HEIGHT,
-                    borderTop: "1px solid var(--line)",
-                    background:
-                      freeOnly && freeHours.has(h)
-                        ? "color-mix(in srgb, var(--free) 13%, transparent)"
-                        : "transparent",
-                  }}
-                />
+        {/* 멤버 헤더 + 그리드 (가로 스크롤) */}
+        <div
+          className="momentum flex-1 overflow-x-auto"
+          style={{ borderLeft: "1px solid var(--line)" }}
+        >
+          <div style={{ minWidth: members.length * MIN_COL }}>
+            {/* 멤버 헤더 */}
+            <div className="flex" style={{ height: HEADER_H, borderBottom: "1px solid var(--line)" }}>
+              {members.map((m) => (
+                <div key={m.id} className="flex flex-1 items-center gap-1.5 px-2 text-sm font-medium">
+                  <span className="inline-block h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: m.color }} />
+                  <span className="truncate">{m.name}</span>
+                </div>
               ))}
             </div>
 
-            {/* 멤버 열 (앞 · 이벤트 블록) */}
-            <div className="absolute inset-0 flex">
-              {members.map((m) => {
-                const mEvents = events.filter((e) => e.member_id === m.id);
-                const lanes = computeLanes(mEvents);
-                return (
+            {/* 그리드 */}
+            <div className="relative" style={{ height: totalHours * HOUR_HEIGHT }}>
+              {/* 시간 밴드 (배경 · 모두 비는 시간) */}
+              <div className="absolute inset-0">
+                {hours.map((h) => (
                   <div
-                    key={m.id}
-                    className="relative flex-1 cursor-pointer transition-colors hover:bg-[var(--surface-2)]"
-                    style={{ borderLeft: "1px solid var(--line)" }}
-                    onClick={(e) => {
-                      const rect = e.currentTarget.getBoundingClientRect();
-                      const y = e.clientY - rect.top;
-                      const hour = visibleStart + Math.floor(y / HOUR_HEIGHT);
-                      onEmptyClick(m.id, Math.min(hour, visibleEnd - 1));
+                    key={h}
+                    style={{
+                      height: HOUR_HEIGHT,
+                      borderTop: "1px solid var(--line)",
+                      background:
+                        freeOnly && freeHours.has(h)
+                          ? "color-mix(in srgb, var(--free) 13%, transparent)"
+                          : "transparent",
                     }}
-                  >
-                    {mEvents.map((ev) => {
-                      const { lane, cols } = lanes[ev.id] ?? { lane: 0, cols: 1 };
-                      const top = (ev.start_hour - visibleStart) * HOUR_HEIGHT;
-                      const height = (ev.end_hour - ev.start_hour) * HOUR_HEIGHT;
-                      const widthPct = 100 / cols;
-                      return (
-                        <button
-                          key={ev.id}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onEventClick(ev);
-                          }}
-                          className="group absolute overflow-hidden rounded-lg px-2 py-1.5 text-left text-white shadow-sm ring-1 ring-black/5 transition hover:-translate-y-px hover:shadow-md"
-                          style={{
-                            top: top + 2,
-                            height: height - 4,
-                            left: `calc(${lane * widthPct}% + 3px)`,
-                            width: `calc(${widthPct}% - 6px)`,
-                            backgroundColor: m.color,
-                          }}
-                          title={`${hourLabel(ev.start_hour)}–${hourLabel(ev.end_hour)}  ${ev.title}`}
-                        >
-                          <div className="truncate text-[13px] font-semibold leading-tight">
-                            {pickTitle(ev, locale)}
-                          </div>
-                          <div className="tabular mt-0.5 text-[11px] opacity-85">
-                            {hourLabel(ev.start_hour)}–{hourLabel(ev.end_hour)}
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* 현재 시각 라인 */}
-            {showNow && nowH !== null && (
-              <div
-                className="pointer-events-none absolute left-0 right-0 z-10"
-                style={{ top: (nowH - visibleStart) * HOUR_HEIGHT }}
-              >
-                <div className="relative">
-                  <span className="absolute -left-1 -top-[3px] h-1.5 w-1.5 rounded-full" style={{ background: "#ef4444" }} />
-                  <div style={{ borderTop: "1.5px solid #ef4444" }} />
-                </div>
+                  />
+                ))}
               </div>
-            )}
+
+              {/* 멤버 열 (이벤트) */}
+              <div className="absolute inset-0 flex">
+                {members.map((m) => {
+                  const mEvents = events.filter((e) => e.member_id === m.id);
+                  const lanes = computeLanes(mEvents);
+                  return (
+                    <div
+                      key={m.id}
+                      className="relative flex-1 cursor-pointer transition-colors hover:bg-[var(--surface-2)]"
+                      style={{ borderLeft: "1px solid var(--line)" }}
+                      onClick={(e) => {
+                        const rect = e.currentTarget.getBoundingClientRect();
+                        const y = e.clientY - rect.top;
+                        const hour = visibleStart + Math.floor(y / HOUR_HEIGHT);
+                        onEmptyClick(m.id, Math.min(hour, visibleEnd - 1));
+                      }}
+                    >
+                      {mEvents.map((ev) => {
+                        const { lane, cols } = lanes[ev.id] ?? { lane: 0, cols: 1 };
+                        const top = (ev.start_hour - visibleStart) * HOUR_HEIGHT;
+                        const height = (ev.end_hour - ev.start_hour) * HOUR_HEIGHT;
+                        const widthPct = 100 / cols;
+                        return (
+                          <button
+                            key={ev.id}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEventClick(ev);
+                            }}
+                            className="absolute overflow-hidden rounded-lg px-1.5 py-1 text-left text-white shadow-sm ring-1 ring-black/5 transition hover:-translate-y-px hover:shadow-md"
+                            style={{
+                              top: top + 2,
+                              height: height - 4,
+                              left: `calc(${lane * widthPct}% + 3px)`,
+                              width: `calc(${widthPct}% - 6px)`,
+                              backgroundColor: m.color,
+                            }}
+                            title={`${hourLabel(ev.start_hour)}–${hourLabel(ev.end_hour)}  ${ev.title}`}
+                          >
+                            <div className="truncate text-[13px] font-semibold leading-tight">
+                              {pickTitle(ev, locale)}
+                            </div>
+                            <div className="tabular text-[11px] opacity-85">
+                              {hourLabel(ev.start_hour)}–{hourLabel(ev.end_hour)}
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* 현재 시각 라인 */}
+              {showNow && nowH !== null && (
+                <div
+                  className="pointer-events-none absolute left-0 right-0 z-10"
+                  style={{ top: (nowH - visibleStart) * HOUR_HEIGHT }}
+                >
+                  <div className="relative">
+                    <span className="absolute -left-1 -top-[3px] h-1.5 w-1.5 rounded-full" style={{ background: "#ef4444" }} />
+                    <div style={{ borderTop: "1.5px solid #ef4444" }} />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>

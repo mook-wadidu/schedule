@@ -28,14 +28,14 @@ export default function DailyNotes({ members, notes, selfMemberId, locale, onSav
         {t("heading")}
       </h2>
 
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="momentum flex gap-2 overflow-x-auto pb-1">
         {members.map((m) => {
           const note = byMember.get(m.id);
           const isSelf = m.id === selfMemberId;
           return (
             <div
               key={m.id}
-              className="flex min-w-[200px] max-w-[260px] flex-1 flex-col gap-1.5 rounded-xl p-3"
+              className="flex min-w-[170px] max-w-[280px] flex-1 flex-col gap-1.5 rounded-xl p-3 sm:min-w-[200px]"
               style={{
                 background: "var(--surface)",
                 border: isSelf
