@@ -43,6 +43,18 @@ export type EventRow = {
   updated_at: string;
 };
 
+export type Note = {
+  id: string;
+  project_id: string;
+  member_id: string;
+  date: string; // YYYY-MM-DD
+  message: string;
+  source_lang: Locale;
+  translations: Translations;
+  created_at: string;
+  updated_at: string;
+};
+
 // 멤버 색 팔레트 (추가 순서대로 배정) — 흰 글씨가 잘 읽히는 600 톤
 export const MEMBER_COLORS = [
   "#e11d48", // rose
@@ -57,7 +69,21 @@ export const MEMBER_COLORS = [
   "#475569", // slate
 ];
 
-// 로케일에 맞는 이벤트 제목 선택 (없으면 원문 fallback)
+// 로케일 번역본 선택 (없으면 원문 fallback) — 공용 헬퍼
+export function pickTranslation(
+  translations: Translations | undefined,
+  original: string,
+  locale: Locale,
+): string {
+  return translations?.[locale]?.trim() || original;
+}
+
+// 이벤트 제목
 export function pickTitle(ev: Pick<EventRow, "title" | "translations">, locale: Locale): string {
-  return ev.translations?.[locale]?.trim() || ev.title;
+  return pickTranslation(ev.translations, ev.title, locale);
+}
+
+// 한 마디 메시지
+export function pickMessage(note: Pick<Note, "message" | "translations">, locale: Locale): string {
+  return pickTranslation(note.translations, note.message, locale);
 }

@@ -69,5 +69,10 @@
   "timetable": {
     "addMemberFirst": "まず名前（メンバー）を追加してください。"
   },
+  "note": {
+    "heading": "今日のひとこと",
+    "placeholder": "今日のひとことを残しましょう",
+    "emptyOther": "まだひとことがありません"
+  },
   "lang": { "ko": "한국어", "ja": "日本語", "en": "English" }
 }

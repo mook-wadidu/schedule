@@ -3,9 +3,10 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
-import { BCP47, EventRow, Locale, Member, Project } from "@/lib/types";
+import { BCP47, EventRow, Locale, Member, Note, Project } from "@/lib/types";
 import { addDays, formatDateDisplay, hourLabel, todayISO } from "@/lib/date";
 import Timetable from "@/components/Timetable";
+import DailyNotes from "@/components/DailyNotes";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
 
 type EventModalState = {
@@ -26,6 +27,7 @@ export default function ProjectClient({ project }: { project: Project }) {
   const [date, setDate] = useState<string>(todayISO());
   const [members, setMembers] = useState<Member[]>([]);
   const [events, setEvents] = useState<EventRow[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [freeOnly, setFreeOnly] = useState(false);
 
   const [selfMemberId, setSelfMemberId] = useState<string | null>(null);
@@ -47,10 +49,21 @@ export default function ProjectClient({ project }: { project: Project }) {
       const data = await res.json();
       setMembers(data.members ?? []);
       setEvents(data.events ?? []);
+      setNotes(data.notes ?? []);
     } catch {
       /* 네트워크 일시 오류는 다음 폴링에서 회복 */
     }
   }, []);
+
+  // "오늘의 한 마디" 저장 (빈 값이면 서버에서 삭제)
+  async function saveNote(memberId: string, message: string) {
+    await fetch("/api/notes", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ member_id: memberId, date, message, source_lang: locale }),
+    });
+    load(date);
+  }
 
   useEffect(() => {
     load(date);
@@ -278,6 +291,15 @@ export default function ProjectClient({ project }: { project: Project }) {
           </button>
         </div>
       </div>
+
+      {/* 오늘의 한 마디 */}
+      <DailyNotes
+        members={members}
+        notes={notes}
+        selfMemberId={selfMemberId}
+        locale={locale}
+        onSave={saveNote}
+      />
 
       <p className="px-1 text-xs text-[var(--muted)]">{t("help")}</p>
 

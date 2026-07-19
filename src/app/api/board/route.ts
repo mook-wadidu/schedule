@@ -17,7 +17,7 @@ export async function GET(req: Request) {
 
   const supabase = getServiceClient();
 
-  const [membersR, eventsR] = await Promise.all([
+  const [membersR, eventsR, notesR] = await Promise.all([
     supabase
       .from("members")
       .select("id, project_id, name, color, created_at")
@@ -31,12 +31,21 @@ export async function GET(req: Request) {
       .eq("project_id", projectId)
       .eq("date", date)
       .order("start_hour", { ascending: true }),
+    supabase
+      .from("notes")
+      .select("id, project_id, member_id, date, message, source_lang, translations, created_at, updated_at")
+      .eq("project_id", projectId)
+      .eq("date", date),
   ]);
 
-  if (membersR.error || eventsR.error) {
-    console.error("board fetch failed", membersR.error, eventsR.error);
+  if (membersR.error || eventsR.error || notesR.error) {
+    console.error("board fetch failed", membersR.error, eventsR.error, notesR.error);
     return NextResponse.json({ error: "fetch_failed" }, { status: 500 });
   }
 
-  return NextResponse.json({ members: membersR.data, events: eventsR.data });
+  return NextResponse.json({
+    members: membersR.data,
+    events: eventsR.data,
+    notes: notesR.data,
+  });
 }

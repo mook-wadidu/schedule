@@ -69,5 +69,10 @@
   "timetable": {
     "addMemberFirst": "Add a name (member) first."
   },
+  "note": {
+    "heading": "Today's note",
+    "placeholder": "Leave a note for today",
+    "emptyOther": "No note yet"
+  },
   "lang": { "ko": "한국어", "ja": "日本語", "en": "English" }
 }
