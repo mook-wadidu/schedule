@@ -1,0 +1,149 @@
+@import "tailwindcss";
+/* Pretendard 폰트는 layout.tsx 의 <link> 로 로드 (Tailwind 인라인 뒤 @import 는 드롭되므로) */
+
+/* ── 디자인 토큰 ─────────────────────────────────────────────── */
+:root {
+  --bg: #f7f7f8;
+  --surface: #ffffff;
+  --surface-2: #f3f3f5;
+  --line: rgba(9, 9, 11, 0.08);
+  --line-strong: rgba(9, 9, 11, 0.14);
+  --muted: #71717a;
+  --fg: #18181b;
+  --accent: #4f46e5;
+  --free: #10b981;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #09090b;
+    --surface: #141417;
+    --surface-2: #1c1c20;
+    --line: rgba(255, 255, 255, 0.09);
+    --line-strong: rgba(255, 255, 255, 0.16);
+    --muted: #a1a1aa;
+    --fg: #fafafa;
+    --accent: #818cf8;
+    --free: #34d399;
+  }
+}
+
+html {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system,
+    "Segoe UI", "Noto Sans JP", "Hiragino Sans", "Yu Gothic", "Malgun Gothic",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*::selection {
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+/* 얇은 스크롤바 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+*::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 9999px;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 재사용 컴포넌트 클래스 ──────────────────────────────────── */
+@layer components {
+  .card {
+    @apply rounded-2xl p-6;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow:
+      0 1px 2px rgba(9, 9, 11, 0.04),
+      0 4px 16px rgba(9, 9, 11, 0.03);
+  }
+
+  .field {
+    @apply w-full rounded-lg px-3 py-2 text-sm outline-none transition;
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    color: var(--fg);
+  }
+  .field::placeholder {
+    color: var(--muted);
+  }
+  .field:focus-visible {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium transition;
+  }
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .btn:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+  .btn-primary {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .btn-primary:not(:disabled):hover {
+    opacity: 0.88;
+  }
+  .btn-primary:not(:disabled):active {
+    opacity: 0.8;
+  }
+  .btn-ghost {
+    background: var(--surface);
+    border: 1px solid var(--line-strong);
+    color: var(--fg);
+  }
+  .btn-ghost:not(:disabled):hover {
+    background: var(--surface-2);
+  }
+  .btn-danger {
+    background: transparent;
+    border: 1px solid color-mix(in srgb, #ef4444 45%, var(--line));
+    color: #e11d48;
+  }
+  .btn-danger:hover {
+    background: color-mix(in srgb, #ef4444 10%, transparent);
+  }
+
+  .chip {
+    @apply inline-flex select-none items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm transition;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--fg);
+  }
+  .chip:hover {
+    background: var(--surface-2);
+  }
+}

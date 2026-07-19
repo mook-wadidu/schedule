@@ -1,0 +1,73 @@
+{
+  "app": { "title": "시간표 플래너" },
+  "home": {
+    "subtitle": "여러 사람의 하루 일정을 1시간 단위로 겹쳐 비교하세요.",
+    "createHeading": "새 프로젝트 만들기",
+    "name": "프로젝트 이름",
+    "namePlaceholder": "예: 우리 팀 주간 일정",
+    "password": "비밀번호",
+    "passwordPlaceholder": "입장할 때 필요합니다 (4자 이상)",
+    "startHour": "표시 시작 시간",
+    "endHour": "표시 종료 시간",
+    "create": "프로젝트 만들기",
+    "creating": "만드는 중…",
+    "openHeading": "기존 프로젝트 열기",
+    "openPlaceholder": "프로젝트 링크 또는 ID 붙여넣기",
+    "open": "열기",
+    "openNote": "입장하려면 프로젝트 비밀번호가 필요합니다.",
+    "errNameRequired": "프로젝트 이름을 입력하세요.",
+    "errPasswordShort": "비밀번호는 4자 이상이어야 합니다.",
+    "errHourOrder": "시작 시간이 종료 시간보다 앞서야 합니다.",
+    "errCreateFailed": "생성에 실패했습니다. 잠시 후 다시 시도하세요.",
+    "listHeading": "프로젝트 목록",
+    "listEmpty": "아직 만들어진 프로젝트가 없어요. 위에서 첫 프로젝트를 만들어 보세요.",
+    "memberCount": "{count}명",
+    "locked": "비밀번호 필요"
+  },
+  "join": {
+    "label": "프로젝트 입장",
+    "passwordPlaceholder": "비밀번호",
+    "submit": "입장",
+    "checking": "확인 중…",
+    "errWrongPassword": "비밀번호가 틀렸습니다.",
+    "errNotFound": "프로젝트를 찾을 수 없습니다.",
+    "errFailed": "입장에 실패했습니다.",
+    "errNetwork": "네트워크 오류가 발생했습니다.",
+    "backHome": "← 홈으로"
+  },
+  "project": {
+    "backHome": "← 홈",
+    "share": "공유",
+    "copied": "링크 복사됨 ✓",
+    "today": "오늘",
+    "selfPlaceholder": "나는… (이름 선택)",
+    "addName": "+ 이름",
+    "freeOnly": "모두 비는 시간",
+    "addEvent": "+ 일정",
+    "help": "빈 칸을 클릭하면 그 시간에 일정을 추가할 수 있어요. 일정 블록을 클릭하면 수정/삭제됩니다."
+  },
+  "member": {
+    "addHeading": "이름 추가",
+    "namePlaceholder": "이름",
+    "cancel": "취소",
+    "add": "추가",
+    "errExists": "이미 있는 이름입니다.",
+    "errFailed": "추가에 실패했습니다."
+  },
+  "event": {
+    "addHeading": "일정 추가",
+    "editHeading": "일정 수정",
+    "who": "누구",
+    "start": "시작",
+    "end": "종료",
+    "content": "내용",
+    "contentPlaceholder": "예: 회의, 수업, 알바…",
+    "delete": "삭제",
+    "cancel": "취소",
+    "save": "저장"
+  },
+  "timetable": {
+    "addMemberFirst": "먼저 이름(멤버)을 추가하세요."
+  },
+  "lang": { "ko": "한국어", "ja": "日本語", "en": "English" }
+}

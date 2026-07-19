@@ -1,0 +1,73 @@
+{
+  "app": { "title": "スケジュールプランナー" },
+  "home": {
+    "subtitle": "複数人の一日の予定を1時間単位で重ねて比較しましょう。",
+    "createHeading": "新しいプロジェクトを作成",
+    "name": "プロジェクト名",
+    "namePlaceholder": "例: チームの週間予定",
+    "password": "パスワード",
+    "passwordPlaceholder": "入室時に必要です（4文字以上）",
+    "startHour": "表示開始時刻",
+    "endHour": "表示終了時刻",
+    "create": "プロジェクトを作成",
+    "creating": "作成中…",
+    "openHeading": "既存のプロジェクトを開く",
+    "openPlaceholder": "プロジェクトのリンクまたはIDを貼り付け",
+    "open": "開く",
+    "openNote": "入室にはプロジェクトのパスワードが必要です。",
+    "errNameRequired": "プロジェクト名を入力してください。",
+    "errPasswordShort": "パスワードは4文字以上にしてください。",
+    "errHourOrder": "開始時刻は終了時刻より前にしてください。",
+    "errCreateFailed": "作成に失敗しました。しばらくして再試行してください。",
+    "listHeading": "プロジェクト一覧",
+    "listEmpty": "まだ作成されたプロジェクトはありません。上で最初のプロジェクトを作成しましょう。",
+    "memberCount": "{count}人",
+    "locked": "パスワードが必要"
+  },
+  "join": {
+    "label": "プロジェクト入室",
+    "passwordPlaceholder": "パスワード",
+    "submit": "入室",
+    "checking": "確認中…",
+    "errWrongPassword": "パスワードが違います。",
+    "errNotFound": "プロジェクトが見つかりません。",
+    "errFailed": "入室に失敗しました。",
+    "errNetwork": "ネットワークエラーが発生しました。",
+    "backHome": "← ホームへ"
+  },
+  "project": {
+    "backHome": "← ホーム",
+    "share": "共有",
+    "copied": "リンクをコピーしました ✓",
+    "today": "今日",
+    "selfPlaceholder": "自分は…（名前を選択）",
+    "addName": "＋ 名前",
+    "freeOnly": "全員空いている時間",
+    "addEvent": "＋ 予定",
+    "help": "空いているマスをクリックするとその時間に予定を追加できます。予定ブロックをクリックすると編集・削除できます。"
+  },
+  "member": {
+    "addHeading": "名前を追加",
+    "namePlaceholder": "名前",
+    "cancel": "キャンセル",
+    "add": "追加",
+    "errExists": "すでに存在する名前です。",
+    "errFailed": "追加に失敗しました。"
+  },
+  "event": {
+    "addHeading": "予定を追加",
+    "editHeading": "予定を編集",
+    "who": "誰",
+    "start": "開始",
+    "end": "終了",
+    "content": "内容",
+    "contentPlaceholder": "例: 会議、授業、バイト…",
+    "delete": "削除",
+    "cancel": "キャンセル",
+    "save": "保存"
+  },
+  "timetable": {
+    "addMemberFirst": "まず名前（メンバー）を追加してください。"
+  },
+  "lang": { "ko": "한국어", "ja": "日本語", "en": "English" }
+}

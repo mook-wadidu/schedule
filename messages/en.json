@@ -1,0 +1,73 @@
+{
+  "app": { "title": "Schedule Planner" },
+  "home": {
+    "subtitle": "Overlay and compare everyone's daily schedule in one-hour blocks.",
+    "createHeading": "Create a new project",
+    "name": "Project name",
+    "namePlaceholder": "e.g. Our team's weekly plan",
+    "password": "Password",
+    "passwordPlaceholder": "Needed to enter (4+ characters)",
+    "startHour": "Display start time",
+    "endHour": "Display end time",
+    "create": "Create project",
+    "creating": "Creating…",
+    "openHeading": "Open an existing project",
+    "openPlaceholder": "Paste project link or ID",
+    "open": "Open",
+    "openNote": "You need the project password to enter.",
+    "errNameRequired": "Please enter a project name.",
+    "errPasswordShort": "Password must be at least 4 characters.",
+    "errHourOrder": "Start time must be before end time.",
+    "errCreateFailed": "Failed to create. Please try again shortly.",
+    "listHeading": "Projects",
+    "listEmpty": "No projects yet. Create the first one above.",
+    "memberCount": "{count, plural, one {# member} other {# members}}",
+    "locked": "Password required"
+  },
+  "join": {
+    "label": "Enter project",
+    "passwordPlaceholder": "Password",
+    "submit": "Enter",
+    "checking": "Checking…",
+    "errWrongPassword": "Wrong password.",
+    "errNotFound": "Project not found.",
+    "errFailed": "Failed to enter.",
+    "errNetwork": "A network error occurred.",
+    "backHome": "← Home"
+  },
+  "project": {
+    "backHome": "← Home",
+    "share": "Share",
+    "copied": "Link copied ✓",
+    "today": "Today",
+    "selfPlaceholder": "I am… (pick a name)",
+    "addName": "+ Name",
+    "freeOnly": "Everyone free",
+    "addEvent": "+ Event",
+    "help": "Click an empty cell to add an event at that time. Click an event block to edit or delete it."
+  },
+  "member": {
+    "addHeading": "Add a name",
+    "namePlaceholder": "Name",
+    "cancel": "Cancel",
+    "add": "Add",
+    "errExists": "That name already exists.",
+    "errFailed": "Failed to add."
+  },
+  "event": {
+    "addHeading": "Add event",
+    "editHeading": "Edit event",
+    "who": "Who",
+    "start": "Start",
+    "end": "End",
+    "content": "Content",
+    "contentPlaceholder": "e.g. Meeting, class, work…",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "save": "Save"
+  },
+  "timetable": {
+    "addMemberFirst": "Add a name (member) first."
+  },
+  "lang": { "ko": "한국어", "ja": "日本語", "en": "English" }
+}
